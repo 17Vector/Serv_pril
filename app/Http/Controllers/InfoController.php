@@ -12,16 +12,16 @@ class InfoController extends Controller
         return response() -> json(['phpinfo' => $phpinfo]);
     }
 
-    public function Infoclient(request $resuest)
+    public function Infoclient(Request $resuest)
     {
         $ip = $resuest -> ip();
         $useragent = $resuest -> header('User-Agent');
-        return response() -> json(['ip' => $ip, 'useragent' => $useragent]);
+        return response() -> json(['useragent' => $useragent,'ip' => $ip]);
     }
 
     public function Infodatabase()
     {
-        $infoDatabase = config('databace.connections.' . config('database.default'));
+        $infoDatabase = config('database.connections.' . config('database.default'));
         return response() -> json(['databaseinfo' => $infoDatabase]);
     }
 }
