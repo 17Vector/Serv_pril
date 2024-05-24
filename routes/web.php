@@ -16,14 +16,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::group(['prefix' => 'api/auth'], function () {
-
-    Route::post('/login', [Controller::class, 'Infoserver']);
-    Route::get('/me', [Controller::class, 'Infodatabase']);
-    Route::post('/out', [Controller::class, 'Infoserver']);
-    Route::get('/tokens', [Controller::class, 'Infoclient']);
-    Route::post('/out_all', [Controller::class, 'Infodatabase']);
-
-    Route::post('/register', [Controller::class, 'Infoclient']);
-});

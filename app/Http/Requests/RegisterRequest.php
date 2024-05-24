@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Regist_DTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -11,7 +12,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -74,5 +75,16 @@ class RegisterRequest extends FormRequest
             'c_password.same' => 'Подтверждение пароля не совпадает с паролем.',
             'birthday.date_format' => 'Дата рождения должна быть в формате ГГГГ-ММ-ДД.',
         ];
+    }
+
+    public function getDTO()
+    {
+        return new Regist_DTO(
+            $this->input('username'), 
+            $this->input('email'), 
+            $this->input('password'),
+            $this->input('c_password'), 
+            $this->input('birthday'),
+        );
     }
 }

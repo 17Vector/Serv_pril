@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\Auth_DTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
@@ -11,7 +12,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -50,5 +51,12 @@ class LoginRequest extends FormRequest
             'username.regex' => 'Имя пользователя должно содержать только буквы латинского алфавита и начинаться с большой буквы.',
             'password.regex' => 'Пароль должен отвечать требованиям по минимальной длине, содержанию цифр, символов верхнего и нижнего регистров.',
         ];
+    }
+
+    public function getDTO()
+    {
+        return new Auth_DTO(
+            $this->input('username'), 
+            $this->input('password'));
     }
 }
