@@ -18,6 +18,11 @@ return new class extends Migration
 
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+
+            $table->timestamp('created_at')->nullable(false)->useCurrent()->comment('Время создания записи');
+            $table->integer('created_by')->nullable(false)->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('deleted_at')->nullable()->comment('Время мягкого удаления записи');
+            $table->integer('deleted_by')->nullable()->comment('Идентификатор пользователя удалившего запись');
         });
     }
 
