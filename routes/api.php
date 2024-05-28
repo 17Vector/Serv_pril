@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth_and_regist_Controller;
+use App\Http\Controllers\AuthСontroller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,14 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('auth')->group(function () {
 
-    Route::post('/login', [Auth_and_regist_Controller::class, 'login']);
+    Route::post('/login', [AuthСontroller::class, 'login']);
 
-    Route::middleware('guest:sanctum')->post('/register', [Auth_and_regist_Controller::class, 'register']);
+    Route::middleware('guest:sanctum')->post('/register', [AuthСontroller::class, 'register']);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [Auth_and_regist_Controller::class, 'me']);
-        Route::post('/out', [Auth_and_regist_Controller::class, 'out']);
-        Route::get('/tokens', [Auth_and_regist_Controller::class, 'tokens']);
-        Route::post('/out_all', [Auth_and_regist_Controller::class, 'out_all']);
+        Route::get('/me', [AuthСontroller::class, 'me']);
+        Route::post('/out', [AuthСontroller::class, 'out']);
+        Route::get('/tokens', [AuthСontroller::class, 'tokens']);
+        Route::post('/out_all', [AuthСontroller::class, 'out_all']);
     });
 });
