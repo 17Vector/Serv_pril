@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles_and_permissions', function (Blueprint $table) {
+        Schema::create('role_and_permissions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('permission_id');
@@ -19,8 +19,10 @@ return new class extends Migration
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
 
-            $table->timestamp('created_at')->nullable(false)->useCurrent()->comment('Время создания записи');
-            $table->integer('created_by')->nullable(false)->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('created_at')->nullable()->useCurrent()->comment('Время создания записи');
+            $table->integer('created_by')->nullable()->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('updated_at')->nullable()->useCurrent()->comment('Время обновления записи');
+            $table->integer('updated_by')->nullable()->comment('Идентификатор пользователя обновившего запись');
             $table->timestamp('deleted_at')->nullable()->comment('Время мягкого удаления записи');
             $table->integer('deleted_by')->nullable()->comment('Идентификатор пользователя удалившего запись');
         });
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles_and_permissions');
+        Schema::dropIfExists('role_and_permissions');
     }
 };

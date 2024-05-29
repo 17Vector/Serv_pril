@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTO\RoleDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRoleRequest extends FormRequest
@@ -11,9 +12,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if (auth()->check())
-            return true;
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -30,23 +29,24 @@ class UpdateRoleRequest extends FormRequest
                 'unique:roles',
             ],
             'description' => [
-                'required',
                 'string',
             ],
-            'encryption' => [
-                'required',
-                'string',
-                'unique:roles',
-            ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.string' => 'Название роли должно быть строкой.',
+            'name.unique' => 'Роль с таким названием уже существует.',
         ];
     }
 
     public function getDTO()
     {
-        return new Role_DTO(
+        return new RoleDTO(
             $this->input('name'), 
-            $this->input('description'), 
-            $this->input('encryption'),
+            $this->input('description')
         );
     }
 }

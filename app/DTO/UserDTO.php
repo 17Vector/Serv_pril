@@ -2,12 +2,12 @@
 
 namespace App\DTO;
 
-class User_DTO
+class UserDTO
 {
-    private $username;
-    private $email;
-    private $password;
-    private $birthday;
+    public $username;
+    public $email;
+    public $password;
+    public $birthday;
     
     public function __construct($username, $email, $password, $birthday)
     {

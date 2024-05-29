@@ -18,7 +18,13 @@ return new class extends Migration
             $table->string('password');
             $table->date('birthday');
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->integer('created_by')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('deleted_by')->nullable();
+            $table->timestamp('deleted_at')->nullable();
+ 
         });
     }
 

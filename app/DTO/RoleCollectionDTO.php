@@ -2,9 +2,9 @@
 
 namespace App\DTO;
 
-class DTO_Roles_Collection
+class RoleCollectionDTO
 {
-    public $roles = [];
+    public $roles;
     
     public function __construct($roles)
     {

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_and_roles', function (Blueprint $table) {
+        Schema::create('user_and_roles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('role_id');
@@ -21,6 +21,8 @@ return new class extends Migration
 
             $table->timestamp('created_at')->nullable(false)->useCurrent()->comment('Время создания записи');
             $table->integer('created_by')->nullable(false)->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('updated_at')->nullable()->useCurrent()->comment('Время обновления записи');
+            $table->integer('updated_by')->nullable()->comment('Идентификатор пользователя обновившего запись');
             $table->timestamp('deleted_at')->nullable()->comment('Время мягкого удаления записи');
             $table->integer('deleted_by')->nullable()->comment('Идентификатор пользователя удалившего запись');
         });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\Regist_DTO;
+use App\DTO\RegistDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -79,11 +79,10 @@ class RegisterRequest extends FormRequest
 
     public function getDTO()
     {
-        return new Regist_DTO(
+        return new RegistDTO(
             $this->input('username'), 
             $this->input('email'), 
             $this->input('password'),
-            $this->input('c_password'), 
             $this->input('birthday'),
         );
     }

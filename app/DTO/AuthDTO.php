@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class Auth_DTO
+class AuthDTO
 {
     public $username;
     public $password;

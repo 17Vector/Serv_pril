@@ -2,16 +2,14 @@
 
 namespace App\DTO;
 
-class Role_DTO
+class PermissionsDTO
 {
     public $name;
     public $description;
-    public $encryption;
     
-    public function __construct($name, $description, $encryption)
+    public function __construct($name, $description)
     {
         $this->name = $name;
         $this->description = $description;
-        $this->encryption = $encryption;
     }
 }

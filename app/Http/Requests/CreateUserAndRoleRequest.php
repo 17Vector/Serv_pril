@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\RoleDTO;
+use App\DTO\UsersAndRolesDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRoleRequest extends FormRequest
+class CreateUserAndRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +23,11 @@ class CreateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'unique:roles',
+            'user_id' => [
+                'integer',
             ],
-            'description' => [
-                'string',
+            'role_id' => [
+                'integer',
             ],
         ];
     }
@@ -37,17 +35,16 @@ class CreateRoleRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Название роли обязательно для заполнения.',
-            'name.string' => 'Название роли должно быть строкой.',
-            'name.unique' => 'Роль с таким названием уже существует.',
+            'user_id.inreger' => 'Идентификатор пользователя должен быть целым числом.',
+            'role_id.inreger' => 'Идентификатор роли должен быть целым числом.',
         ];
     }
 
     public function getDTO()
     {
-        return new RoleDTO(
-            $this->input('name'), 
-            $this->input('description'), 
+        return new UsersAndRolesDTO(
+            $this->input('user_id'), 
+            $this->input('role_id'), 
         );
     }
 }

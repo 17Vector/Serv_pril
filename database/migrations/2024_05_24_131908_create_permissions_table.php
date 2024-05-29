@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('description')->nullable()->comment('Описание разрешения');
             $table->string('encryption')->unique()->comment('Шифр разрешения');
             
-            $table->timestamp('created_at')->nullable(false)->useCurrent()->comment('Время создания записи');
-            $table->integer('created_by')->nullable(false)->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('created_at')->nullable()->useCurrent()->comment('Время создания записи');
+            $table->integer('created_by')->nullable()->comment('Идентификатор пользователя создавшего запись');
+            $table->timestamp('updated_at')->nullable()->useCurrent()->comment('Время обновления записи');
+            $table->integer('updated_by')->nullable()->comment('Идентификатор пользователя обновившего запись');
             $table->timestamp('deleted_at')->nullable()->comment('Время мягкого удаления записи');
             $table->integer('deleted_by')->nullable()->comment('Идентификатор пользователя удалившего запись');
         });

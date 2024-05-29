@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 
-class Auth_and_regist_Controller extends Controller
+class AuthСontroller extends Controller
 {
     public function register(RegisterRequest $request): JsonResponse
     {

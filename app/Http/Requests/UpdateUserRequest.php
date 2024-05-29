@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\AuthDTO;
+use App\DTO\UserDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -27,12 +27,27 @@ class LoginRequest extends FormRequest
                 'required',
                 'string',
                 'regex:/^[A-Z][a-zA-Z]{6,}$/',
+                'unique:users',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'unique:users',
             ],
             'password' => [
                 'required',
                 'string',
                 'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/',
+            ],
+            'c_password' => [
+                'required',
+                'string',
+                'same:password',
+            ],
+            'birthday' => [
+                'date_format:Y-m-d',
             ],
         ];
     }
@@ -41,7 +56,10 @@ class LoginRequest extends FormRequest
     {
         return [
             'username' => 'Имя пользователя',
+            'email' => 'Email пользователя',
             'password' => 'Пароль пользователя',
+            'c_password' => 'Подтверждение пароля',
+            'birthday' => 'Дата рождения',
         ];
     }
 
@@ -49,14 +67,22 @@ class LoginRequest extends FormRequest
     {
         return [
             'username.regex' => 'Имя пользователя должно содержать только буквы латинского алфавита и начинаться с большой буквы.',
+            'username.unique' => 'Это имя пользователя уже занято.',
+            'email.email' => 'Пожалуйста, укажите корректный email адрес.',
+            'email.unique' => 'Пользователь с таким email уже зарегистрирован.',
             'password.regex' => 'Пароль должен отвечать требованиям по минимальной длине, содержанию цифр, символов верхнего и нижнего регистров.',
+            'c_password.same' => 'Подтверждение пароля не совпадает с паролем.',
+            'birthday.date_format' => 'Дата рождения должна быть в формате ГГГГ-ММ-ДД.',
         ];
     }
 
     public function getDTO()
     {
-        return new AuthDTO(
+        return new UserDTO(
             $this->input('username'), 
-            $this->input('password'));
+            $this->input('email'), 
+            $this->input('password'),
+            $this->input('birthday'),
+        );
     }
 }
