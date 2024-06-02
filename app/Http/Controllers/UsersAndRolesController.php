@@ -20,7 +20,9 @@ class UsersAndRolesController extends Controller
 
     public function specificUserAndRole($user_id): JsonResponse
     {
-        $user = User::with('roles')->find($user_id);
+        $user = User::with(['roles' => function ($query) {
+            $query->whereNull('user_and_roles.deleted_at');
+        }])->find($user_id);
 
         if (!$user)
         {

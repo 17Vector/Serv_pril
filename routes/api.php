@@ -43,6 +43,8 @@ Route::prefix('ref/policy')->middleware('auth:sanctum')->group(function () {
         Route::get('', [RoleController::class, 'showListRoles'])->middleware('check.permission:role-get-list');
         Route::post('', [RoleController::class, 'createRole'])->middleware('check.permission:role-create');
 
+        Route::get('/list', [RolesAndPermissionsController::class, 'showListRolesAndPermissions'])->middleware('check.permission:role_and_permission-get-list');
+
         Route::prefix('{id}')->group(function () {
             Route::get('', [RoleController::class, 'specificRole'])->middleware('check.permission:role-read');
             Route::put('', [RoleController::class, 'updateRole'])->middleware('check.permission:role-update');
@@ -80,6 +82,8 @@ Route::prefix('ref/policy')->middleware('auth:sanctum')->group(function () {
         Route::get('', [UserController::class, 'showListUsers'])->middleware('check.permission:user-get-list');
         Route::post('', [UserController::class, 'createUser'])->middleware('check.permission:user-create');
 
+        Route::get('/list', [UsersAndRolesController::class, 'showListUsersAndRoles'])->middleware('check.permission:user_and_role-get-list');
+
         Route::prefix('{id}')->group(function () { 
             Route::get('', [UserController::class, 'specificUser'])->middleware('check.permission:user-read');
             Route::put('', [UserController::class, 'updateUser'])->middleware('check.permission:user-update');
@@ -89,13 +93,13 @@ Route::prefix('ref/policy')->middleware('auth:sanctum')->group(function () {
         });
 
         Route::prefix('{user_id}/role')->group(function () { 
-            Route::get('', [UsersAndRolesController::class, 'specificUserAndRole'])->middleware('check.permission:user-read');
-            Route::post('', [UsersAndRolesController::class, 'createUserAndRole'])->middleware('check.permission:user-create');
+            Route::get('', [UsersAndRolesController::class, 'specificUserAndRole'])->middleware('check.permission:user_and_role-read');
+            Route::post('', [UsersAndRolesController::class, 'createUserAndRole'])->middleware('check.permission:user_and_role-create');
 
             Route::prefix('{role_id}')->group(function () {
-                Route::delete('', [UsersAndRolesController::class, 'hardDeleteUserAndRole'])->middleware('check.permission:user-delete');
-                Route::delete('/soft', [UsersAndRolesController::class, 'softDeleteUserAndRole'])->middleware('check.permission:user-delete');
-                Route::post('/restore', [UsersAndRolesController::class, 'restoreUserAndRole'])->middleware('check.permission:user-restore');
+                Route::delete('', [UsersAndRolesController::class, 'hardDeleteUserAndRole'])->middleware('check.permission:user_and_role-delete');
+                Route::delete('/soft', [UsersAndRolesController::class, 'softDeleteUserAndRole'])->middleware('check.permission:user_and_role-delete');
+                Route::post('/restore', [UsersAndRolesController::class, 'restoreUserAndRole'])->middleware('check.permission:user_and_role-restore');
             });
         });
     });

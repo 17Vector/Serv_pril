@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\UserAndRole;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 
@@ -23,6 +25,14 @@ class AuthСontroller extends Controller
         ]);
 
         $user->save();
+
+        $role_id = Role::where('name', 'User')->first()->id;
+
+        $userAndRole = new UserAndRole([
+            'user_id' => $user -> id,
+            'role_id' => $role_id,
+        ]);
+        $userAndRole -> save();
 
         return response()->json(['Экземпляр ресурса созданного пользователя' => $user], 201);
     }

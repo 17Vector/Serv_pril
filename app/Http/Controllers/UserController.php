@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
 use App\Models\UserAndRole;
 use App\DTO\UserCollectionDTO;
 use App\Http\Requests\CreateUserRequest;
@@ -40,6 +41,15 @@ class UserController extends Controller
         ]);
 
         $user -> save();
+
+        $role_id = Role::where('name', 'User')->first()->id;
+
+        $userAndRole = new UserAndRole([
+            'user_id' => $user -> id,
+            'role_id' => $role_id,
+        ]);
+        $userAndRole -> save();
+
         return response()->json(['Пользователь успешно создан' => $user], 201);
     }
 
@@ -67,7 +77,7 @@ class UserController extends Controller
 
         checkUser($user);
         
-        //UserAndRole::where('user_id', $id)->forceDelete();
+        UserAndRole::where('user_id', $id)->forceDelete();
 
         $user->forceDelete();
 
@@ -80,7 +90,7 @@ class UserController extends Controller
 
         checkUser($user);
 
-       // UserAndRole::where('user_id', $id)->delete();
+        UserAndRole::where('user_id', $id)->delete();
 
         $user->delete();
 

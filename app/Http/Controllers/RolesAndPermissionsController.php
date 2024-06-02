@@ -20,7 +20,9 @@ class RolesAndPermissionsController extends Controller
 
     public function specificRoleAndPermission($role_id): JsonResponse
     {
-        $role = Role::with('permissions')->find($role_id);
+        $role = Role::with(['permissions' => function ($query) {
+            $query->whereNull('role_and_permissions.deleted_at');
+        }])->find($role_id);
 
         if (!$role)
         {
