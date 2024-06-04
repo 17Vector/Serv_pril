@@ -83,4 +83,9 @@ class User extends Authenticatable
             $query->where('name', $permission);
         })->exists();
     }
+
+    public function twoFactorCodes()
+    {
+        return $this->hasMany(TwoFactorModel::class);
+    }
 }

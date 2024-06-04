@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('auth')->group(function () {
 
     Route::post('/login', [AuthСontroller::class, 'login']);
+    Route::post('/login/confirm_tfa', [AuthСontroller::class, 'tfCodeConfirm']);
+    Route::post('/login/resend_tfa', [AuthСontroller::class, 'resendCode']);
 
     Route::middleware('guest:sanctum')->post('/register', [AuthСontroller::class, 'register']);
 
