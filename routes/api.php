@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RolesAndPermissionsController;
 use App\Http\Controllers\UsersAndRolesController;
+use App\Http\Controllers\ChangeLogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -54,7 +55,7 @@ Route::prefix('ref')->middleware('auth:sanctum')->group(function () {
                 Route::delete('/soft', [RoleController::class, 'softDeleteRole'])->middleware('check.permission:role-delete');
                 Route::post('/restore', [RoleController::class, 'restoreRole'])->middleware('check.permission:role-restore');
 
-                Route::get('/story', [RoleController::class, 'getRoleLogs'])/*->middleware('check.permission:role-read')*/; //LB4
+                Route::get('/story', [ChangeLogController::class, 'getRoleLogs'])->middleware('check.permission:role-get-story'); //LB4
             });
 
             Route::prefix('{role_id}/permission')->group(function () {
@@ -80,7 +81,7 @@ Route::prefix('ref')->middleware('auth:sanctum')->group(function () {
                 Route::delete('/soft', [PermissionsController::class, 'softDeletePermission'])->middleware('check.permission:permission-delete');
                 Route::post('/restore', [PermissionsController::class, 'restorePermission'])->middleware('check.permission:permission-restore');
 
-                Route::get('/story', [ChangeLogController::class, 'getPermissionLogs'])/*->middleware('check.permission:get-story-permission')*/; // LB4
+                Route::get('/story', [ChangeLogController::class, 'getPermissionLogs'])->middleware('check.permission:permission-get-story'); // LB4
             });
         });
 
@@ -111,5 +112,8 @@ Route::prefix('ref')->middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::get('/user/{id}/story', [RoleController::class, 'getUserLogs'])/*->middleware('check.permission:user-get-story')*/; //LB4
+    Route::get('/user/{id}/story', [ChangeLogController::class, 'getUserLogs'])->middleware('check.permission:user-get-story'); //LB4
+
+    Route::get('/story', [ChangeLogController::class, 'getListLogs'])->middleware('check.permission:get-logs-collection'); // LB4
+    Route::post('/story/{id}/restore', [ChangeLogController::class, 'restoreLog'])->middleware('check.permission:restore-log'); // Lab4
 });

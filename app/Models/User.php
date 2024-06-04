@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Traits\ChangeLoggable;
 
 class User extends Authenticatable
 {
+    use ChangeLoggable;
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes; 
-
     /**
      * The attributes that are mass assignable.
      *

@@ -22,28 +22,28 @@ trait ChangeLoggable
         });
     }
 
-    public function logChange($action)
+    protected function logChange($action)
     {
         $user = Auth::user();
 
         $log = new ChangeLog();
-        $log->table = get_class($this);
+        $log->table = get_class($this);     //class_basename($this) . 's';
         $log->table_id = $this->id;
         $log->user_id = $user ? $user->id : null;
 
-        if ($event === 'created')
+        if ($action === 'created')
         {
             $log->old_value = $this->getOriginal();
             $log->new_value = $this->getAttributes();
         }
 
-        else if ($event === 'updated')
+        else if ($action === 'updated')
         {
-            $log->old_value = null;
+            $log->old_value = $this->getOriginal();
             $log->new_value = $this->getAttributes();
         }
 
-        else if ($event === 'deleted')
+        else if ($action === 'deleted')
         {
             $log->old_value = $this->getAttributes();
             $log->new_value = null;

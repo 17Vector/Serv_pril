@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Traits\ChangeLoggable;
 
 class Permission extends Model
 {
     use HasFactory, SoftDeletes;
+    use ChangeLoggable;
 
     protected $fillable = [
         'name',

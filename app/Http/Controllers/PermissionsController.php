@@ -8,6 +8,7 @@ use App\Http\Requests\CreatePermissionsRequest;
 use App\Http\Requests\UpdatePermissionsRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PermissionsController extends Controller
 {
@@ -29,72 +30,129 @@ class PermissionsController extends Controller
 
     public function createPermission(CreatePermissionsRequest $request): JsonResponse
     {
-        $newPermissionsDTO = $request -> getDTO();
+        DB::beginTransaction();
 
-        $permission = new Permission ([
-            'name' => $newPermissionsDTO -> name,
-            'description' => $newPermissionsDTO -> description,
-        ]);
-        $permission -> save();
-        return response()->json(['Создание разрешения завершено успешно' => $permission], 201);
+        try {
+            $newPermissionsDTO = $request -> getDTO();
+
+            $permission = new Permission ([
+                'name' => $newPermissionsDTO -> name,
+                'description' => $newPermissionsDTO -> description,
+            ]);
+            $permission -> save();
+
+            DB::commit();
+
+            return response()->json(['Создание разрешения завершено успешно' => $permission], 201);
+        }
+
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при создании разрешения'], 500);
+        }
+        
     }
 
     public function updatePermission($id, UpdatePermissionsRequest $request): JsonResponse
     {
-        $updatePermissionDTO = $request -> getDTO();
+        DB::beginTransaction();
 
-        $permission= Permission::find($id);
+        try {
+            $updatePermissionDTO = $request -> getDTO();
 
-        checkPermission($permission);
+            $permission= Permission::find($id);
 
-        $permission->name = $updatePermissionDTO->name;
-        $permission->description = $updatePermissionDTO->description;
+            checkPermission($permission);
 
-        $permission->save();
+            $permission->name = $updatePermissionDTO->name;
+            $permission->description = $updatePermissionDTO->description;
 
-        return response()->json(['message' => 'Разрешение изменено успешно'], 200);
+            $permission->save();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Разрешение изменено успешно'], 200);
+        }
+
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при обновлении разрешения'], 500);
+        }
     }
 
     public function hardDeletePermission($id): JsonResponse
     {
-        $permission = Permission::find($id);
+        DB::beginTransaction();
 
-        checkPermission($permission);
-        
-        RoleAndPermission::where('permission_id', $id)->forceDelete();
+        try {
+            $permission = Permission::find($id);
 
-        $permission->forceDelete();
+            checkPermission($permission);
+            
+            RoleAndPermission::where('permission_id', $id)->forceDelete();
 
-        return response()->json(['message' => 'Разрешение удалено (hard delete)'], 200);
+            $permission->forceDelete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Разрешение удалено (hard delete)'], 200);
+        }
+
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при удалении разрешения (hard)'], 500);
+        }
     }
 
     public function softDeletePermission($id): JsonResponse
     {
-        $permission = Permission::find($id);
+        DB::beginTransaction();
 
-        checkPermission($permission);
+        try {
+            $permission = Permission::find($id);
 
-        RoleAndPermission::where('permission_id', $id)->delete();
+            checkPermission($permission);
 
-        $permission->delete();
+            RoleAndPermission::where('permission_id', $id)->delete();
 
-        return response()->json(['message' => 'Разрешение удалено (soft delete)'], 200);
+            $permission->delete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Разрешение удалено (soft delete)'], 200);
+        }
+
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при удалении разрешения (hard)'], 500);
+        }
     }
 
     public function restorePermission($id): JsonResponse
     {
-        $permission = Permission::withTrashed()->find($id);
+        DB::beginTransaction();
 
-        if ($permission && $permission->trashed())
-        {
-            $permission->restore();
+        try {
+            $permission = Permission::withTrashed()->find($id);
 
-            RoleAndPermission::withTrashed()->where('permission_id', $id)->restore();
+            if ($permission && $permission->trashed())
+            {
+                $permission->restore();
+    
+                RoleAndPermission::withTrashed()->where('permission_id', $id)->restore();
+                
+                DB::commit();
 
-            return response()->json(['message' => 'Разрешение успешно восстановлено'], 200);
+                return response()->json(['message' => 'Разрешение успешно восстановлено'], 200);
+            }
+            DB::commit();
+            return response()->json(['message' => 'Разрешение не найдено или не было удалено'], 404);
         }
 
-        return response()->json(['message' => 'Разрешение не найдено или не было удалено'], 404);
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при удалении разрешения (hard)'], 500);
+        }
     }
 }
 

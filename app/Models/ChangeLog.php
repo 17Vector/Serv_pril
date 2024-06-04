@@ -9,9 +9,11 @@ class ChangeLog extends Model
 {
     use HasFactory;
 
+    protected $table = 'change_logs';
+
     protected $fillable = [
-        'entity',
-        'entity_id',
+        'table',
+        'table_id',
         'old_value',
         'new_value',
         'user_id',

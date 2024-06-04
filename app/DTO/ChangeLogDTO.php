@@ -20,7 +20,7 @@ class ChangeLogDTO
         $this->new_value = $this->getChanges($log->new_value, $log->old_value);
     }
 
-    private function getChanges($new, $old) {
+    public function getChanges($new, $old) {
         if ($old === null && is_array($new))
         {
             return $new;
