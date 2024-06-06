@@ -86,6 +86,6 @@ class User extends Authenticatable
 
     public function twoFactorCodes()
     {
-        return $this->hasMany(TwoFactorModel::class);
+        return $this->hasOne(TwoFactorModel::class);
     }
 }
