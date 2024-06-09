@@ -10,6 +10,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -31,92 +32,148 @@ class UserController extends Controller
 
     public function createUser(CreateUserRequest $request): JsonResponse
     {
-        $newUserDTO = $request -> getDTO();
+        DB::beginTransaction();
 
-        $user = new User([
-            'username' => $newUserDTO->username,
-            'email' => $newUserDTO->email,
-            'password' => $newUserDTO->password,
-            'birthday' => $newUserDTO->birthday,
-        ]);
+        try {
+            $newUserDTO = $request -> getDTO();
 
-        $user -> save();
+            $user = new User([
+                'username' => $newUserDTO->username,
+                'email' => $newUserDTO->email,
+                'password' => $newUserDTO->password,
+                'birthday' => $newUserDTO->birthday,
+            ]);
+    
+            $user -> save();
+            DB::commit();
 
-        $role_id = Role::where('name', 'User')->first()->id;
+            $role_id = Role::where('name', 'User')->first()->id;
+    
+            $userAndRole = new UserAndRole([
+                'user_id' => $user -> id,
+                'role_id' => $role_id,
+            ]);
+            $userAndRole -> save();
+    
+            return response()->json(['Пользователь успешно создан' => $user], 201);
+        }
 
-        $userAndRole = new UserAndRole([
-            'user_id' => $user -> id,
-            'role_id' => $role_id,
-        ]);
-        $userAndRole -> save();
-
-        return response()->json(['Пользователь успешно создан' => $user], 201);
+        catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Произошла ошибка при создании пользователя'], 500);
+        }
     }
 
     public function updateUser($id, UpdateUserRequest $request): JsonResponse
     {
-        $updateUserDTO = $request -> getDTO();
+        DB::beginTransaction();
 
-        $user= User::find($id);
+        try {
+            $updateUserDTO = $request -> getDTO();
 
-        checkUser($user);
+            $user= User::find($id);
 
-        $user->username = $updateUserDTO->username;
-        $user->email = $updateUserDTO->email;
-        $user->password = $updateUserDTO->password;
-        $user->birthday = $updateUserDTO->birthday;
+            checkUser($user);
 
-        $user->save();
+            $user->username = $updateUserDTO->username;
+            $user->email = $updateUserDTO->email;
+            $user->password = $updateUserDTO->password;
+            $user->birthday = $updateUserDTO->birthday;
 
-        return response()->json(['message' => 'Данные пользователя успешно изменены'], 200);
+            $user->save();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Данные пользователя успешно изменены'], 200);
+        }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Произошла ошибка при изменении данных пользователя'], 500);
+        }
     }
 
     public function hardDeleteUser($id): JsonResponse
     {
-        $user = User::find($id);
+        DB::beginTransaction();
 
-        checkUser($user);
-        
-        UserAndRole::where('user_id', $id)->forceDelete();
+        try {
+            $user = User::find($id);
 
-        $user->forceDelete();
+            checkUser($user);
+            
+            UserAndRole::where('user_id', $id)->forceDelete();
 
-        return response()->json(['message' => 'Пользователь удален (hard delete)'], 200);
+            $user->forceDelete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Пользователь удален (hard delete)'], 200);
+        }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при удалении пользователя (hard)'], 500);
+        }
     }
 
     public function softDeleteUser($id): JsonResponse
     {
-        $user = User::find($id);
+        DB::beginTransaction();
 
-        checkUser($user);
+        try {
+            $user = User::find($id);
 
-        UserAndRole::where('user_id', $id)->delete();
+            checkUser($user);
 
-        $user->delete();
+            UserAndRole::where('user_id', $id)->delete();
 
-        return response()->json(['message' => 'Пользователь удален (soft delete)'], 200);
+            $user->delete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Пользователь удален (soft delete)'], 200);
+        }
+
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при удалении пользователя (soft)'], 500);
+        }        
     }
 
     public function restoreUser($id): JsonResponse
     {
-        $user = User::withTrashed()->find($id);
+        DB::beginTransaction();
 
-        if ($user && $user->trashed())
-        {
-            $user->restore();
+        try {
+            $user = User::withTrashed()->find($id);
 
-            //UserAndRole::withTrashed()->where('user_id', $id)->restore();
+            if ($user && $user->trashed())
+            {
+                $user->restore();
 
-            return response()->json(['message' => 'Данные пользователя успешно восстановлены'], 200);
+                UserAndRole::withTrashed()->where('user_id', $id)->restore();
+
+                DB::commit();
+
+                return response()->json(['message' => 'Данные пользователя успешно восстановлены'], 200);
+            }
+            DB::commit();
+
+            return response()->json(['message' => 'Данные пользователя не найдены или не были удалены'], 404);
         }
 
-        return response()->json(['message' => 'Данные пользователя не найдены или не были удалены'], 404);
+        catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Ошибка при восстановлении данных пользователя'], 500);
+        } 
     }
 }
 
 function checkUser($user) {
     if (!$user)
     {
+        DB::commit();
         return response()->json(['error' => 'Пользователя не существует'], 404);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\DTO\RoleDTO;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRoleRequest extends FormRequest
@@ -26,7 +27,8 @@ class UpdateRoleRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                'unique:roles',
+                //'unique:roles',
+                Rule::unique('roles')->ignore($this->id),
             ],
             'description' => [
                 'string',

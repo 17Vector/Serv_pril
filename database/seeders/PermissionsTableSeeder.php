@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
 
 class PermissionsTableSeeder extends Seeder
@@ -25,5 +26,16 @@ class PermissionsTableSeeder extends Seeder
                 ]);
             }
         }
+
+        $permissions = [];
+        DB::table('permissions')->insert([
+            ['name' => 'role-get-story', 'encryption' => Str::uuid()],
+            ['name' => 'permission-get-story', 'cipencryptionher' => Str::uuid()],
+            ['name' => 'user-get-story', 'encryption' => Str::uuid()],
+            ['name' => 'get-logs-collection', 'encryption' => Str::uuid()],
+            ['name' => 'restore-log', 'encryption' => Str::uuid()],
+        ]);
+
+        DB::table('permissions')->insert($permissions);
     }
 }
