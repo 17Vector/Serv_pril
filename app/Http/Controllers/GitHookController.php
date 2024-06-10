@@ -55,13 +55,13 @@ class GitHookController extends Controller
         $descripList = [
             'Переключение на главную ветку',
             'Получение сведений о текущих изменениях',
-            'Отмена всех изменений',
+            'Откат изменений до последнего коммита main',
             'Обновление проекта с Git до последней версии'
         ];
 
         foreach ($gitCommands as $key => $stage) {
             Log::info("Идёт выполнение команды: $stage", ['description' => $descripList[$key]]);
-            $result = shell_exec($command);
+            $result = shell_exec($stage);
             Log::info($result);
         }
     }
