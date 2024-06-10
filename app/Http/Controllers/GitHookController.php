@@ -23,17 +23,17 @@ class GitHookController extends Controller
         $this -> isAction = true;
 
         $this -> createLog($request);
-
+        
         try {
             $this -> changeCode();
+            $this -> createLog($request);
             return response()->json(['message' => 'Изменение кода прошло успешно.'], 200);
         }
         
         catch (\Exception $e) {
+            $this -> createLog($request);
             return response()->json(['message' => 'Произошла ошибка при изменении кода.'], 500);
         }
-        
-        $this -> isAction = false;
     }
 
     private function createLog(Request $request) {

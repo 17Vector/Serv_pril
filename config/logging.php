@@ -54,13 +54,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'database'],
+            'channels' => ['single'],
             'ignore_exceptions' => false,
-        ],
-
-        'database' => [
-        'driver' => 'database',
-        'table' => 'git_logs',
         ],
 
         'single' => [
