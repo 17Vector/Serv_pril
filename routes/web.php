@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GitWebhookController;
+use App\Http\Controllers\GitHookController;
 
 /*
 |--------------------------------------------------------------------------
