@@ -39,7 +39,7 @@ class GitHookController extends Controller
     private function createLog(Request $request) {
         $newLog = [
             'date' => now(),
-            'ip' => ip(),
+            'ip' => $request -> ip(),
         ];
         Log::info('Изменение кода...', $newLog);
     }
