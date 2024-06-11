@@ -9,6 +9,7 @@ use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RolesAndPermissionsController;
 use App\Http\Controllers\UsersAndRolesController;
 use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\LogRequestController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -118,4 +119,11 @@ Route::prefix('ref')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/story', [ChangeLogController::class, 'getListLogs'])->middleware('check.permission:get-logs-collection'); // LB4
     Route::post('/story/{id}/restore', [ChangeLogController::class, 'restoreLog'])->middleware('check.permission:restore-log'); // Lab4
+
+    Route::prefix('log/request')->group(function () { //LAB 7
+
+            Route::get('', [LogRequestController::class, 'getLogList'])->middleware('check.permission:get-logs-list');
+            Route::get('/{user_id}', [LogRequestController::class, 'specificLog'])->middleware('check.permission:get-specific-log');
+            Route::delete('/{user_id}', [LogRequestController::class, 'hardDeleteLog'])->middleware('check.permission:delete-log');
+    }); //LAB 7
 });

@@ -29,11 +29,15 @@ class PermissionsTableSeeder extends Seeder
 
         $permissions = [];
         DB::table('permissions')->insert([
-            ['name' => 'role-get-story', 'encryption' => Str::uuid()],
+            ['name' => 'role-get-story', 'encryption' => Str::uuid()],  //Lab4
             ['name' => 'permission-get-story', 'cipencryptionher' => Str::uuid()],
             ['name' => 'user-get-story', 'encryption' => Str::uuid()],
             ['name' => 'get-logs-collection', 'encryption' => Str::uuid()],
             ['name' => 'restore-log', 'encryption' => Str::uuid()],
+
+            ['name' => 'get-logs-list', 'encryption' => Str::uuid()], //Lab7
+            ['name' => 'get-specific-log', 'encryption' => Str::uuid()],
+            ['name' => 'delete-log', 'encryption' => Str::uuid()],
         ]);
 
         DB::table('permissions')->insert($permissions);
