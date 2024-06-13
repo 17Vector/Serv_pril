@@ -123,7 +123,7 @@ Route::prefix('ref')->middleware('auth:sanctum')->group(function () {
     Route::prefix('log/request')->group(function () { //LAB 7
 
             Route::get('', [LogRequestController::class, 'getLogList'])->middleware('check.permission:get-logs-list');
-            Route::get('/{user_id}', [LogRequestController::class, 'specificLog'])->middleware('check.permission:get-specific-log');
-            Route::delete('/{user_id}', [LogRequestController::class, 'hardDeleteLog'])->middleware('check.permission:delete-log');
+            Route::get('/{id}', [LogRequestController::class, 'specificLog'])->middleware('check.permission:get-specific-log');
+            Route::delete('/{id}', [LogRequestController::class, 'hardDeleteLog'])->middleware('check.permission:delete-log');
     }); //LAB 7
 });

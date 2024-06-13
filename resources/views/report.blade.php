@@ -97,7 +97,7 @@
         <tbody>
         @foreach($userRequest as $ur)
             <tr>
-                <td>{{ $ur->user_id }}</td>
+                <td>{{ isset($ur->user_id) ? $ur->user_id : 'guests' }}</td>
                 <td>{{ $ur->total }}</td>
             </tr>
         @endforeach
