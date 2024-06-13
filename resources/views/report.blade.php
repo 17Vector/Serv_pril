@@ -90,7 +90,7 @@
     <table>
         <thead>
         <tr>
-            <th><h3>User</h3></th>
+            <th><h3>User (id)</h3></th>
             <th><h3>Number of Requests</h3></th>
         </tr>
         </thead>
@@ -108,7 +108,7 @@
     <table>
         <thead>
         <tr>
-            <th><h3>User</h3></th>
+            <th><h3>User (id)</h3></th>
             <th><h3>Number of Logins</h3></th>
         </tr>
         </thead>
@@ -126,7 +126,7 @@
     <table>
         <thead>
         <tr>
-            <th><h3>User</h3></th>
+            <th><h3>User (id)</h3></th>
             <th><h3>Number of Permissions</h3></th>
         </tr>
         </thead>
@@ -144,7 +144,7 @@
     <table>
         <thead>
         <tr>
-            <th><h3>User</h3></th>
+            <th><h3>User (id)</h3></th>
             <th><h3>Number of Changes</h3></th>
         </tr>
         </thead>
