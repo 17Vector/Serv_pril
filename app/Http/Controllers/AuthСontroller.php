@@ -40,7 +40,7 @@ class AuthСontroller extends Controller
 
         return response()->json(['Экземпляр ресурса созданного пользователя' => $user], 201);
     }
-
+    
     public function login(LoginRequest $request): JsonResponse
     {
         $authDTO = $request->getDTO();
@@ -86,7 +86,8 @@ class AuthСontroller extends Controller
             $token_Lifetime = env('TOKEN_LIFETIME', 3);
 
             if ($activeTokenQuant < $maxActiveTokens) {
-                $token = $user->createToken('token')->plainTextToken;
+                $token = $user->createToken('token', ['*'], 
+                            now()->addMinutes($token_Lifetime))->plainTextToken;
 
                 return response()->json(['Токен пользователя' => $token], 200);
             }

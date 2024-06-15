@@ -14,8 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $interval = env('TIMEOUT_REPEATING_REPORT_OPERATION', 60);
-        $schedule->command('app:generate-and-send-report')->everyMinute($interval);
+        $interval = env('TIMEOUT_REPEATING_REPORT_OPERATION','* * * * *');
+        $schedule->command('app:generate-and-send-report')->cron($interval);
     }
 
     /**

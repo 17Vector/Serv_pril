@@ -17,9 +17,12 @@ class LogRequests
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $newLog = new LogRequest();
+        $newLog->user_id = $request->user() ? $request->user()->id : null;
+
         $response = $next($request);
 
-        $newLog = new LogRequest();
+        
         $newLog->url = $request->fullUrl();
         $newLog->http_method = $request->method();
 
@@ -29,7 +32,7 @@ class LogRequests
         $newLog->request_body = json_encode($request->all());
         $newLog->request_header = json_encode($request->headers->all());
 
-        $newLog->user_id = $request->user() ? $request->user()->id : null;
+        
         $newLog->ip_user = $request->ip();
         $newLog->user_agent = $request->header('User-Agent');
 
